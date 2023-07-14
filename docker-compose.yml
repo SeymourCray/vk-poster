@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  service:
+    build: ./
+    container_name: app
+    restart: on-failure
+    ports:
+      - "8080:${HTTP_PORT}"
+    volumes:
+      - ./.files:/app/data/files
+    depends_on:
+      - postgres
+    environment:
+      - HTTP_PORT=${HTTP_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - SERVICE_USER=${SERVICE_USER}
+      - SERVICE_PASSWORD=${SERVICE_PASSWORD}
+      - CLIENT_ID=${CLIENT_ID}
+      - CLIENT_SECRET=${CLIENT_SECRET}
+      - IP=${IP}
+      - AUTH_TOKEN=${AUTH_TOKEN}
+      - TARGET_ID=${TARGET_ID}
+
+  postgres:
+    image: postgres:latest
+    container_name: db
+    restart: on-failure
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.database:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - TZ=${TZ}
